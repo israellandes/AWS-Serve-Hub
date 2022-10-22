@@ -218,7 +218,8 @@ Help()
 
 aws_config()
 {
-sudo apt -y install awscli
+sudo sed -i 's/#$nrconf{restart} = '"'"'i'"'"';/$nrconf{restart} = '"'"'a'"'"';/g' /etc/needrestart/needrestart.conf
+sudo DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -y && sudo apt update -y && sudo apt upgrade -y && sudo apt -y install awscli
 aws configure --profile devaccount
 }
 
