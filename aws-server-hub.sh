@@ -230,13 +230,40 @@ cat ~/.aws/config
 cat ~/.aws/credentials
 }
 
+list_buckets()
+{
+aws s3 ls --profile devaccount
+}
+
+create_bucket()
+{
+# If no arguments passed, creates a bucket un US-West-1
+
+if [ "$1" ] && [ "$2"  ]; then
+    bucket_name="$1"
+    region="$2"
+    aws s3api create-bucket --bucket "$bucket_name" --region "$region" --create-bucket-configuration LocationConstraint="$region" --profile devaccount
+elif [ "$1" ]; then
+    bucket_name="$1"
+    region="us-west-1"
+    aws s3api create-bucket --bucket "$bucket_name" --region "$region" --profile devaccount
+fi
+}
+
+
+remove_bucket()
+{
+bucket_name=$1
+aws s3 rb "s3://$bucket_name" --force --profile devaccount
+}
+
 download_bucket()
 {
 yourbucket=backups-p2
 youramount=10
 yourbucket=$1
 youramount=$2
-aws s3api list-objects --bucket $yourbucket --max-items $youramount
+aws s3api list-objects --bucket $yourbucket --max-items $youramount --devaccount
 }
 
 while :; do
@@ -253,9 +280,13 @@ while :; do
             print_configs    # Display a usage synopsis.
             exit
             ;;
+	-l|-\?|--list-buckets)
+            list_buckets    # Display a usage synopsis.
+            exit
+            ;;
 #########################################################################################################################################################################################################
 
-        -b|--download)       # Takes an option argument; ensure it has been specified.
+        -d|--download-bucket)       # Takes an option argument; ensure it has been specified.
 	     if [ "$2" ] || [ "$3"  ]; then
              file=$2
 	     file1=$3
@@ -264,6 +295,30 @@ while :; do
             else
                 echo 'ERROR: "--file" requires a non-empty option argument.'
             fi
+            ;;
+        -r|--remove-bucket)       # Takes an option argument; ensure it has been specified.
+	     if [ "$2" ]; then
+             bucket=$2
+             remove_bucket "$bucket"
+                shift
+            else
+                echo 'ERROR: "--file" requires a non-empty option argument.'
+            fi
+            ;;
+        -c|--create-bucket)       # Takes an option argument; ensure it has been specified.
+	     if [ "$2" ] && [ "$3" ]; then
+		    bucket_name="$2"
+		    region="$3"
+		    create_bucket "$bucket_name" "$region"
+		    shift 2
+		elif [ "$2" ]; then
+		    bucket_name="$2"
+		    create_bucket "$bucket_name" "us-west-1"
+		    shift
+		else
+		    echo 'ERROR: "--file" requires two non-empty option arguments.'
+		    exit 1
+		fi
             ;;
 #########################################################################################################################################################################################################
 
