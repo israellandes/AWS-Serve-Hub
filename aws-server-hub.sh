@@ -68,15 +68,13 @@ Help()
 {
    clear
    # Display NSA Help
-   echo "---- "${lightgreen}""${bold}"WELCOME TO NONSTOP ALGO!"${normal}" ----"
+   echo "---- "${lightgreen}""${bold}"WELCOME TO AWS Server Hub!"${normal}" ----"
    echo
-   echo ""${bold}"Syntax: ["${white}"~/nsa/bin/asn.sh options:"${normal}""
+   echo ""${bold}"Syntax: ["${white}"~/AWS-Server-Hub/aws-server-hub.sh --config options:"${normal}""
    echo
-   echo "["${lightyellow}"--help"${normal}"|"${lightyellow}"installation"${normal}"|"${lightyellow}"finish"${normal}"|"${lightyellow}"build "${lightpurple}"ARG1"${normal}"|"${lightyellow}"update"${normal}" "${lightpurple}"ARG1"${normal}"]"
+   echo "["${lightyellow}"--help"${normal}"|"${lightyellow}"config"${normal}"|"${lightyellow}"print"${normal}"|"${lightyellow}"list-buckets"${normal}"|"${lightyellow}"create-bucket"${normal}" "${lightpurple}"ARG1 ARG2"${normal}"]"
    echo
-   echo "["${lightyellow}"delete"${normal}"|"${lightyellow}"copy "${lightpurple}"ARG1 ARG2"${normal}"|"${lightyellow}"backup"${normal}""${lightpurple}" ARG1"${normal}"|"${lightyellow}"restore-backup"${normal}"|"${lightyellow}"remove-backup"${normal}"]"
-   echo
-   echo "["${lightyellow}"configs"${lightpurple}" ARG1"${normal}"|"${lightyellow}"build-rcmd"${lightpurple}" ARG1"${normal}"|"${lightyellow}"remove-rcmd"${normal}"|"${lightyellow}"autostart"${lightpurple}" ARG1 ARG2 ARG3"${normal}"|"${lightyellow}"remove-autostart"${normal}"]"
+   echo "["${lightyellow}"remove-bucket"${lightpurple}"ARG1"${normal}"|"${lightyellow}"download-bucket"${normal}""${lightpurple}" ARG1"${normal}"]"
    echo
    echo ""${aqua}""${bold}"-------------------------------------------------------------------------------------"$normal""
    echo "---------"$normal" "${lightgreen}""${bold}"START HERE:"${normal}" ----------"${normal}""
@@ -90,131 +88,55 @@ Help()
    echo ""${aqua}""${bold}"----------------------------------------------------------------"${normal}""
    echo
    echo ""${aqua}""${bold}"-------------------------------------------------------------------------------------"$normal""
-   echo "--------- "${lightyellow}""${lightgreen}""${bold}"INSTALLATION"${normal}" ---------"
+   echo "--------- "${lightyellow}""${lightgreen}""${bold}"INSTALLATION and AWS CLI Profile Setup"${normal}" ---------"
    echo
    echo ""${aqua}""${bold}"----------------------------------------------------------------"${normal}""
-   echo " "${lightyellow}""${bold}"--installation"${normal}" - Install Dependancies."
-   echo "       "${gray}"* This command will install all required dependacies (+2GB). Ubuntu Tested."
-   echo "       "${gray}"* Ex. --installation"${normal}""
+   echo " "${lightyellow}""${bold}"--config"${normal}" - Install Dependancies Sets Up AWS Profile."
+   echo "       "${gray}"* This command will install all required dependacies and setup a --profile "devaccount". (Ubuntu Tested)"
+   echo "       "${gray}"* Ex. --config"${normal}""
    echo "       "${gray}"* No ARGS"
    echo ""${aqua}""${bold}"----------------------------------------------------------------"${normal}""
    echo
    echo ""${aqua}""${bold}"----------------------------------------------------------------"${normal}""
-   echo " "${lightyellow}""${bold}"--finish"${normal}" - Finish Docker Install."
-   echo "       "${gray}"* This command will complete your installation."${normal}""
+   echo " "${lightyellow}""${bold}"--print"${normal}" - Print AWS CLI Profile Configs."
+   echo "       "${gray}"* This command will print your current AWS CLI Profile configs listed under your ~/.aws/ directory."${normal}""
    echo "       "${gray}"* Ex. --final"${normal}""
    echo "       "${gray}"* No ARGS"
    echo ""${aqua}""${bold}"----------------------------------------------------------------"${normal}""
    echo
    echo ""${aqua}""${bold}"-------------------------------------------------------------------------------------"${normal}""
-   echo "--------- "${lightgreen}""${bold}"MANAGE BOTS "${normal}"----------"
+   echo "--------- "${lightgreen}""${bold}"AWS Server Hub Commands"${normal}"----------"
    echo
    echo ""${aqua}""${bold}"----------------------------------------------------------------"${normal}""
-   echo " "${lightyellow}""${bold}"--build"${normal}" - How Many Bots Do You Want To Build? "${lightpurple}"ARG1"${normal}""
-   echo "       "${gray}"* This command is asking you to choose "${lightpurple}"ARG1"${normal}""
-   echo "       "${gray}"* "${lightpurple}"ARG1"${normal}" "${gray}"- Is the number of Bot number you want to build."${normal}""
-   echo "       "${gray}"* Ex. --build 10 = 10 Bots will be built."${normal}""
-   echo "       "${gray}"* This command will build the number of Bots you specify for "${lightpurple}"ARG1"${normal}""
-   echo ""${aqua}""${bold}"----------------------------------------------------------------"${normal}""
-   echo
-   echo ""${aqua}""${bold}"----------------------------------------------------------------"${normal}""
-   echo " "${lightyellow}""${bold}"--update"${normal}" - How Many Bots to Update To Master? "${lightpurple}"ARG1"${normal}""
-   echo "       "${gray}"* This command is asking you to choose "${lightpurple}"ARG1"${normal}""
-   echo "       "${gray}"* "${lightpurple}"ARG1"${normal}" "${gray}"- Is the amount of Bots you want to update all other bots numbered 1 - "${lightpurple}"ARG1"${gray}" to a copy of Master Bot 1."${normal}""
-   echo "       "${gray}"* Ex. --update 10 = Bot 1 {Master Bot} configurations get inherited to all other Bots numbered 1 through 10"${normal}""
-   echo "       "${gray}"* This command will update Bots 1 through "${lightpurple}"ARG2"${gray}", to the same config as "${lightpurple}"ARG1"${normal}""
-   echo ""${aqua}""${bold}"----------------------------------------------------------------"${normal}""
-   echo
-   echo ""${aqua}""${bold}"----------------------------------------------------------------"${normal}""
-   echo " "${lightyellow}""${bold}"--configs"${normal}" - What Bot Configs Do You Want To See? "${lightpurple}"ARG1"${normal}""
-   echo "       "${gray}"* This command is asking you to choose "${lightpurple}"ARG1"${normal}""
-   echo "       "${gray}"* "${lightpurple}"ARG1"${normal}" "${gray}"- Is the Bot number you want."${normal}""
-   echo "       "${gray}"* Ex. --configs 1 = Bot 1 configs will be printed."${normal}""
-   echo "       "${gray}"* This command will print the Bot number config you specify for "${lightpurple}"ARG1"${normal}""
-   echo ""${aqua}""${bold}"----------------------------------------------------------------"${normal}""
-   echo
-   echo ""${aqua}""${bold}"----------------------------------------------------------------"${normal}""
-   echo " "${lightyellow}""${bold}"--copy"${normal}" - Which Bot Configs Will Copy To All Others? "${lightpurple}"ARG1 ARG2"${normal}""
-   echo "       "${gray}"* This command is asking you to choose "${lightpurple}"ARG1"${normal}" "${gray}"and"${normal}" "${lightpurple}"ARG2"${normal}""
-   echo "       "${gray}"* "${lightpurple}"ARG1"${normal}" "${gray}"- Is the Bot number you want to copy. Ex. nsa-1 = 1"${normal}"" 
-   echo "       "${gray}"* "${lightpurple}"ARG2"${normal}" "${gray}"- Is the number of Bots to turn into a copy of "${lightpurple}"ARG1"
-   echo "       "${gray}"* This command copies the bot number specified in "${lightpurple}"ARG1"${normal}" "${gray}"configs."${normal}""
-   echo "       "${gray}"* All bots numbered 1 through "${lightpurple}"ARG2"${normal}" "${gray}"( 1 - "${lightpurple}"ARG2"${normal}" "${gray}") will be updated."${normal}""
-   echo ""${aqua}""${bold}"----------------------------------------------------------------"${normal}""
-   echo
-   echo ""${aqua}""${bold}"----------------------------------------------------------------"${normal}""
-   echo " "${lightyellow}""${bold}"--backup"${normal}" -  Creates Folder Backup of Bot Stategies/ Configs / APIs / Passwords / Trade History."
-   echo "       "${gray}"* This command is asking you to choose "${lightpurple}"ARG1"${normal}""
-   echo "       "${gray}"* "${lightpurple}"ARG1"${normal}" "${gray}"- Is the Bot number you want to backup."${normal}""
-   echo "       "${gray}"* Ex. --backup 1 = Bot 1 backed-up to ~/backup"${normal}""
-   echo "       "${gray}"* This command will build the number of Bots you specify for "${lightpurple}"ARG1"${normal}""
-   echo ""${aqua}""${bold}"----------------------------------------------------------------"${normal}""
-   echo
-   echo ""${aqua}""${bold}"----------------------------------------------------------------"${normal}""
-   echo " "${lightyellow}""${bold}"--restore-backup"${normal}" -  Restores Backup to Master Bot (1)  Stategies/ Configs / APIs / Passwords / Trade History."
-   echo "       "${gray}"* "${gray}"- Will erase/replace the configs of Bot number 1 with the latest backups configs."${normal}""
-   echo "       "${gray}"* Ex. --restore-backup"
-   echo "       "${gray}"* No ARGS"${normal}""
-   echo "       "${gray}"* This command will restore the most recent ~/backup/hummingbot_conf/ files created from the --backup flag"
-   echo ""${aqua}""${bold}"----------------------------------------------------------------"${normal}""
-   echo
-   echo ""${aqua}""${bold}"----------------------------------------------------------------"${normal}""
-   echo " "${lightyellow}""${bold}"--autostart"${normal}" - Creates "${lightpurple}"ARG1"${normal}" Amount of Auto-Start Bots. Choose your Strategy "${lightpurple}"ARG2"${normal}" and Config File Name"${lightpurple}" ARG3 "${normal}"."
-# Variables: 1="loop 1 to nsa-?" , 2="you_strategy" , 3="your_password", 4="your_strategy_conf_file"
-   echo "       "${gray}"* This command is asking you to choose "${lightpurple}"ARG1 ARG2 ARG3"${normal}""
-   echo "       "${gray}"* You will be prompted to enter your Bots password before Autostart finishes building Bots."${normal}""
-   echo "       "${gray}"* "${lightpurple}"ARG1"${normal}" "${gray}"- Is the number of Autostart Bots you want to build."${normal}""
-   echo "       "${gray}"* "${lightpurple}"ARG2"${normal}" "${gray}"- Is the strategy for your Autostart Bots."${normal}""
-   echo "       "${gray}"* "${lightpurple}"ARG3"${normal}" "${gray}"- Is the configuration file used for your Autostart Bots."${normal}""
-   echo "       "${gray}"* Ex. --autostart 10 premium_liquitity_mining conf_liquidity_mining_1.yml = Bot 10 of the Premium Liquidity Mining Strategy  will be built using it's specified configuration file."${normal}""
-   echo "       "${gray}"* This command will build number of Auto-start Bots you specify for "${lightpurple}"ARG1"${normal}", "${gray}"Your Chosen Strategy Name "${lightpurple}"ARG2"${normal}""${gray}" and the Configuration File Name"${lightpurple}" ARG3 "${normal}"."
-
-   echo ""${aqua}""${bold}"----------------------------------------------------------------"${normal}""
-   echo
-   echo ""${aqua}""${bold}"----------------------------------------------------------------"${normal}""
-   echo " "${lightyellow}""${bold}"--build-rcmd"${normal}" - Creates RCMD Bot."
-   echo "       "${gray}"* This command is asking you to choose "${lightpurple}"ARG1"${normal}""
-   echo "       "${gray}"* "${lightpurple}"ARG1"${normal}" "${gray}"- Is the number of Bot number you want to build."${normal}""
-   echo "       "${gray}"* Ex. --update 10 = Bot 1 coppied 1-10"${normal}""
-   echo "       "${gray}"* This command will build the number of Bots you specify for "${lightpurple}"ARG1"${normal}""
-   echo ""${aqua}""${bold}"----------------------------------------------------------------"${normal}""
-   echo
-   echo ""${aqua}""${bold}"-------------------------------------------------------------------------------------"${normal}""
-   echo "-------- "${lightgreen}""${bold}"HOUSE-KEEPING "${normal}"---------"
-   echo
-   echo ""${aqua}""${bold}"----------------------------------------------------------------"${normal}""
-   echo " "${lightyellow}""${bold}"--remove-autostart"${normal}" - Deletes Auto-Start Bots If Exists"
-   echo "       "${gray}"* This command will remove ALL Autostart bots."
-   echo "       "${gray}"* Ex. --remove-autostart"${normal}""
+   echo " "${lightyellow}""${bold}"--list-buckets"${normal}" - Lists All S3 Buckets."${lightpurple}"ARG1"${normal}""
+   echo "       "${gray}"* This command will print all AWS S3 Buckets you currently have."${lightpurple}"ARG1"${normal}""
+   echo "       "${gray}"* Ex. --list-buckets"${normal}""
    echo "       "${gray}"* No ARGS"
    echo ""${aqua}""${bold}"----------------------------------------------------------------"${normal}""
    echo
    echo ""${aqua}""${bold}"----------------------------------------------------------------"${normal}""
-   echo " "${lightyellow}""${bold}"--remove-rcmd"${normal}" - Deletes RCMD Bots If Exists"
-   echo "       "${gray}"* This command will remove ALL RCMD Bots."
-   echo "       "${gray}"* Ex. --remove-rcmd"${normal}""
-   echo "       "${gray}"* No ARGS"
+   echo " "${lightyellow}""${bold}"--create-bucket"${normal}" - Creates an AWS S3 Bucket? "${lightpurple}"ARG1" "ARG2"${normal}""
+   echo "       "${gray}"* This command is asking you to choose 1 or 2 arguments: "${lightpurple}"ARG1" "ARG2"${normal}""
+   echo "       "${gray}"* "${lightpurple}"ARG1"${normal}" "${gray}"- Is the name of your S3 bucket. "${normal}""
+   echo "       "${gray}"* "${lightpurple}"ARG2"${normal}" "${gray}"- Is the region for your S3 bucket, default region is "us-west-1" if no "${lightpurple}"""ARG2"${normal}" is specified. "${normal}""
+   echo "       "${gray}"* Ex. --create-bucket "test-bucket-60994" "us-west-2""${normal}""
    echo ""${aqua}""${bold}"----------------------------------------------------------------"${normal}""
    echo
    echo ""${aqua}""${bold}"----------------------------------------------------------------"${normal}""
-   echo " "${lightyellow}""${bold}"--remove-backup"${normal}" - Deletes Backup If Exists."   
-   echo "       "${gray}"* This command will remove ALL Backups if any."
-   echo "       "${gray}"* Ex. --remove-backup"${normal}""
-   echo "       "${gray}"* No ARGS"
+   echo " "${lightyellow}""${bold}"--remove-bucket"${normal}" - Choose Which AWS S3 Bucket to Delete "${lightpurple}"ARG1"${normal}""
+   echo "       "${gray}"* Enter the name of the bucket you want to remove. "${lightpurple}"ARG1"${normal}""
+   echo "       "${gray}"* "${lightpurple}"ARG1"${normal}" "${gray}"- Is bucket name."${normal}""
+   echo "       "${gray}"* Ex. --remove-bucket "test-bucket-60994""${normal}""
    echo ""${aqua}""${bold}"----------------------------------------------------------------"${normal}""
    echo
    echo ""${aqua}""${bold}"----------------------------------------------------------------"${normal}""
-   echo " "${lightyellow}""${bold}"--delete"${normal}" - Start from Scratch Make Sure to Create Backup(s) - ***WARNING!! - ALL BOTS WILL BE DELETED."
-   echo "       "${gray}"* This command is asking you to choose "${lightpurple}"ARG1"${normal}""
-   echo "       "${gray}"* "${lightpurple}"ARG1"${normal}" "${gray}"- Is the number of Bot number you want to build."${normal}""
-   echo "       "${gray}"* Ex. --update 10 = Bot 1 coppied 1-10"${normal}""
-   echo "       "${gray}"* This command will build the number of Bots you specify for "${lightpurple}"ARG1"${normal}""
+   echo " "${lightyellow}""${bold}"--download-bucket"${normal}" - Choose Bucket too Download/Sync and Local Directory to Copy To "${lightpurple}"ARG1 ARG2"${normal}""
+   echo "       "${gray}"* Enter your bucket to downlaod "${lightpurple}"ARG1"${normal}" "${gray}"and your local directory location to copy too"${normal}" "${lightpurple}"ARG2"${normal}""
+   echo "       "${gray}"* "${lightpurple}"ARG1"${normal}" "${gray}"- Is the Bucket to copy."${normal}"" 
+   echo "       "${gray}"* "${lightpurple}"ARG2"${normal}" "${gray}"- Is the the local directory to copy too."${lightpurple}""
+   echo "       "${gray}"* Ex. --download-bucket "test-bucket-60994" "~/local-directory""${normal}""
    echo ""${aqua}""${bold}"----------------------------------------------------------------"${normal}""
-   echo
-   echo ""${aqua}""${bold}"-------------------------------------------------------------------------------------"${normal}""
-   echo
 }
-
 
 aws_config()
 {
@@ -250,7 +172,6 @@ elif [ "$1" ]; then
 fi
 }
 
-
 remove_bucket()
 {
 bucket_name=$1
@@ -259,11 +180,10 @@ aws s3 rb "s3://$bucket_name" --force --profile devaccount
 
 download_bucket()
 {
-yourbucket=backups-p2
-youramount=10
-yourbucket=$1
-youramount=$2
-aws s3api list-objects --bucket $yourbucket --max-items $youramount --devaccount
+my_bucket="$1"
+local_folder="$2"
+aws s3 sync s3://"$my_bucket" "$local_folder"
+
 }
 
 while :; do
@@ -288,12 +208,12 @@ while :; do
 
         -d|--download-bucket)       # Takes an option argument; ensure it has been specified.
 	     if [ "$2" ] || [ "$3"  ]; then
-             file=$2
-	     file1=$3
-             download_bucket "$file" "$file1"
+             my_bucket=$2
+	         local_folder=$3
+             download_bucket "$my_bucket" "$local_folder"
                 shift
             else
-                echo 'ERROR: "--file" requires a non-empty option argument.'
+                echo 'ERROR: "--download-bucket" requires a non-empty option argument.'
             fi
             ;;
         -r|--remove-bucket)       # Takes an option argument; ensure it has been specified.
@@ -302,7 +222,7 @@ while :; do
              remove_bucket "$bucket"
                 shift
             else
-                echo 'ERROR: "--file" requires a non-empty option argument.'
+                echo 'ERROR: "--remove-bucket" requires a non-empty option argument.'
             fi
             ;;
         -c|--create-bucket)       # Takes an option argument; ensure it has been specified.
@@ -316,7 +236,7 @@ while :; do
 		    create_bucket "$bucket_name" "us-west-1"
 		    shift
 		else
-		    echo 'ERROR: "--file" requires two non-empty option arguments.'
+		    echo 'ERROR: "--create-bucket" requires two non-empty option arguments.'
 		    exit 1
 		fi
             ;;
