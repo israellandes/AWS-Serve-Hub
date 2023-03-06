@@ -1,4 +1,4 @@
-#!/bin/bash
+0#!/bin/bash
 
 bold=`echo -en "\e[1m"`
  underline=`echo -en "\e[4m"`
@@ -186,6 +186,95 @@ aws s3 sync s3://"$my_bucket" "$local_folder"
 
 }
 
+list_bucket_web_configs()
+{
+bucket=$1
+aws s3api get-bucket-website --bucket "$bucket" --profile devaccount
+}
+
+add_bucket_website()
+{
+# Add static website hosting configuration from an S3 bucket using the AWS CLI
+bucket=$1
+clear
+echo "Adding Static Website Configuration for Bucket: $bucket"
+aws s3api put-bucket-website --bucket "$bucket" --website-configuration file://./configs/static-website-config.json --profile devaccount
+echo "Done"
+echo "$bucket"
+aws s3api get-bucket-website --bucket "$bucket" --profile devaccount
+}
+
+
+remove_bucket_website()
+{
+# Remove static website hosting configuration from an S3 bucket using the AWS CLI
+bucket=$1
+clear
+echo "Removing Static Website Configuration for Bucket: $bucket"
+aws s3api delete-bucket-website --bucket $bucket --profile devaccount
+echo "Done"
+echo "$bucket"
+aws s3api get-bucket-website --bucket "$bucket" --profile devaccount
+}
+
+add_bucket_website_redirect()
+{
+bucket=$1
+bucket_redirect=$2
+clear
+echo "Adding Static Website Redirect Configuration for Bucket: $bucket"
+sed -i "s/\$DOMAIN/$bucket_redirect/g" ./configs/static-website-redirect-config.json
+aws s3api put-bucket-website --profile devaccount --bucket "$bucket" --website-configuration file://./configs/static-website-redirect-config.json
+cp -r ./configs/defaults/static-website-redirect-config.json.copy ./configs/static-website-redirect-config.json
+echo "Done"
+echo "$bucket"
+aws s3api get-bucket-website --bucket "$bucket" --profile devaccount
+}
+
+add_bucket_static_policy()
+{
+bucket=$1
+clear
+echo "Adding Static Website Policy for Bucket: $bucket"
+sed -i "s/\$DOMAIN/$bucket/g" ./configs/static-website-policy-config.json
+aws s3api put-bucket-policy --bucket "$bucket" --policy file://./configs/static-website-policy-config.json --profile devaccount
+cat ./configs/static-website-policy-config.json
+cp -r ./configs/defaults/static-website-policy-config.json.copy ~/aws-server-hub/configs/static-website-policy-config.json
+echo "Done"
+echo "$bucket"
+aws s3api get-bucket-policy --bucket "$bucket" --profile devaccount
+}
+
+remove_bucket_policy()
+{
+bucket=$1
+clear
+echo "Removing Bucket Policy for $bucket"
+aws s3api delete-bucket-policy --bucket "$bucket" --profile devaccount
+echo "Done"
+aws s3api get-bucket-policy --bucket "$bucket" --profile devaccount
+}
+
+make_bucket_public()
+{
+bucket=$1
+echo "Making bucket public"
+aws s3api put-public-access-block --bucket "$bucket" --public-access-block-configuration "BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true" --profile devaccount
+echo "Done"
+echo "$bucket"
+aws s3api get-public-access-block --bucket "$bucket" --profile devaccount
+}
+
+make_bucket_private()
+{
+bucket=$1
+aws s3api put-public-access-block --bucket "$bucket" --public-access-block-configuration "BlockPublicAcls=false,IgnorePublicAcls=false,BlockPublicPolicy=false,RestrictPublicBuckets=false" --profile devaccount
+echo "Done"
+echo "$bucket"
+aws s3api get-public-access-block --bucket "$bucket" --profile devaccount
+
+}
+
 while :; do
     case $1 in
         -h|-\?|--help)
@@ -207,10 +296,20 @@ while :; do
 #########################################################################################################################################################################################################
 
         -d|--download-bucket)       # Takes an option argument; ensure it has been specified.
-	     if [ "$2" ] || [ "$3"  ]; then
+	     if [ "$2" ] && [ "$3"  ]; then
              my_bucket=$2
-	         local_folder=$3
+	     local_folder=$3
              download_bucket "$my_bucket" "$local_folder"
+                shift
+            else
+                echo 'ERROR: "--download-bucket" requires a non-empty option argument.'
+            fi
+            ;;
+	-d|--add-bucket-website-redirect)       # Takes an option argument; ensure it has been specified.
+	     if [ "$2" ] && [ "$3"  ]; then
+             my_bucket=$2
+	     my_redirect_bucket=$3
+             add_bucket_website_redirect "$my_bucket" "$my_redirect_bucket"
                 shift
             else
                 echo 'ERROR: "--download-bucket" requires a non-empty option argument.'
@@ -223,6 +322,69 @@ while :; do
                 shift
             else
                 echo 'ERROR: "--remove-bucket" requires a non-empty option argument.'
+            fi
+            ;;
+	-l|--list-bucket-web-configs)       # Takes an option argument; ensure it has been specified.
+	     if [ "$2" ]; then
+             bucket=$2
+             list_bucket_web_configs "$bucket"
+                shift
+            else
+                echo 'ERROR: "--remove-bucket" requires a non-empty option argument.'
+            fi
+            ;;
+        -r|--remove-bucket-website)       # Takes an option argument; ensure it has been specified.
+	     if [ "$2" ]; then
+             bucket=$2
+             remove_bucket_website "$bucket"
+                shift
+            else
+                echo 'ERROR: "--remove-bucket-website" requires a non-empty option argument.'
+            fi
+            ;;
+        -a|--add-bucket-website)       # Takes an option argument; ensure it has been specified.
+	     if [ "$2" ]; then
+             bucket=$2
+             add_bucket_website "$bucket"
+                shift
+            else
+                echo 'ERROR: "--add-bucket-website" requires a non-empty option argument.'
+            fi
+            ;;
+        -a|--add-bucket-static-policy)       # Takes an option argument; ensure it has been specified.
+	     if [ "$2" ]; then
+             bucket=$2
+             add_bucket_static_policy "$bucket"
+                shift
+            else
+                echo 'ERROR: "--add-bucket-website" requires a non-empty option argument.'
+            fi
+            ;;
+        -a|--remove-bucket-policy)       # Takes an option argument; ensure it has been specified.
+	     if [ "$2" ]; then
+             bucket=$2
+             remove_bucket_policy "$bucket"
+                shift
+            else
+                echo 'ERROR: "--add-bucket-website" requires a non-empty option argument.'
+            fi
+            ;;
+	-b|--bucket-public)       # Takes an option argument; ensure it has been specified.
+	     if [ "$2" ]; then
+             bucket=$2
+             make_bucket_public "$bucket"
+                shift
+            else
+                echo 'ERROR: "--add-bucket-website" requires a non-empty option argument.'
+            fi
+            ;;
+	-b|--bucket-private)       # Takes an option argument; ensure it has been specified.
+	     if [ "$2" ]; then
+             bucket=$2
+             make_bucket_private "$bucket"
+                shift
+            else
+                echo 'ERROR: "--add-bucket-website" requires a non-empty option argument.'
             fi
             ;;
         -c|--create-bucket)       # Takes an option argument; ensure it has been specified.
