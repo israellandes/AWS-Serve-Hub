@@ -20,8 +20,7 @@ Your default aws config profile will appear in home directory '**~/aws-server-hu
 Please note that a AWS CLI profiel will be crated with the name **--profile devaccount**
 To use AWS CLI commands by defualt make sure to specify the **--profile devaccount**, or you can modify it in your **~/.aws/** directory.
 
-	chmod 777 ./wp-to-hugo-export.sh
-	sudo ./wp-to-hugo-export.sh
+	~/aws-server-hub/aws-server-hub.sh --config
   
 ##  Usage
 
