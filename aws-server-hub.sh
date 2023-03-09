@@ -182,8 +182,21 @@ download_bucket()
 {
 my_bucket="$1"
 local_folder="$2"
-aws s3 sync s3://"$my_bucket" "$local_folder"
+aws s3 sync s3://"$my_bucket" "$local_folder" --profile devaccount
+}
 
+sync_files_to_bucket()
+{
+my_bucket="$1"
+local_folder="$2"
+aws s3 sync "$local_folder" s3://"$my_bucket"/ --profile devaccount
+}
+
+sync_bucket_to_folder()
+{
+my_bucket="$1"
+local_folder="$2"
+aws s3 sync s3://"$my_bucket"/ "$local_folder" --profile devaccount
 }
 
 list_bucket_web_configs()
@@ -300,6 +313,26 @@ while :; do
              my_bucket=$2
 	     local_folder=$3
              download_bucket "$my_bucket" "$local_folder"
+                shift
+            else
+                echo 'ERROR: "--download-bucket" requires a non-empty option argument.'
+            fi
+            ;;
+        -d|--sync-files-to-bucket)       # Takes an option argument; ensure it has been specified.
+	     if [ "$2" ] && [ "$3"  ]; then
+             my_bucket=$2
+	     local_folder=$3
+             sync_files_to_bucket "$my_bucket" "$local_folder"
+                shift
+            else
+                echo 'ERROR: "--download-bucket" requires a non-empty option argument.'
+            fi
+            ;;
+        -d|--sync-bucket-to-folder)       # Takes an option argument; ensure it has been specified.
+	     if [ "$2" ] && [ "$3"  ]; then
+             my_bucket=$2
+	     local_folder=$3
+             sync_bucket_to_folder "$my_bucket" "$local_folder"
                 shift
             else
                 echo 'ERROR: "--download-bucket" requires a non-empty option argument.'
