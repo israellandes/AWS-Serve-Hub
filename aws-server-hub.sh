@@ -1,4 +1,4 @@
-0#!/bin/bash
+#!/bin/bash
 
 bold=`echo -en "\e[1m"`
  underline=`echo -en "\e[4m"`
