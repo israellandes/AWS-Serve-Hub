@@ -178,6 +178,12 @@ bucket_name=$1
 aws s3 rb "s3://$bucket_name" --force --profile devaccount
 }
 
+remove_bucket_content()
+{
+my_bucket="$1"
+aws s3 rm s3://"$my_bucket" --recursive --profile devaccount
+}
+
 download_bucket()
 {
 my_bucket="$1"
@@ -361,6 +367,15 @@ while :; do
 	     if [ "$2" ]; then
              bucket=$2
              list_bucket_web_configs "$bucket"
+                shift
+            else
+                echo 'ERROR: "--remove-bucket" requires a non-empty option argument.'
+            fi
+	    ;;
+	-l|--remove-bucket-content)       # Takes an option argument; ensure it has been specified.
+	     if [ "$2" ]; then
+             bucket=$2
+             remove_bucket_content "$bucket"
                 shift
             else
                 echo 'ERROR: "--remove-bucket" requires a non-empty option argument.'
